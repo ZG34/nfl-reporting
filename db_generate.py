@@ -3,7 +3,6 @@ import pandas as pd
 import sqlite3 as sql
 
 
-
 # class used for initial generation of data.
 class GenerateDatabase:
     def __init__(self, *args, **kwargs):
@@ -11,15 +10,11 @@ class GenerateDatabase:
         self.cursor = self.connection.cursor()
 
     def restart_process(self):
-        query3 = """CREATE TABLE  IF NOT EXISTS backup_combined AS SELECT * FROM combined2_copy"""
-        query4 = """CREATE TABLE IF NOT EXISTS backup_hidden AS SELECT * FROM hidden_factors"""
         query0 = """DROP TABLE IF EXISTS combined2"""
         query1 = """DROP TABLE IF EXISTS combined"""
         query2 = """DROP TABLE IF EXISTS combined2_copy"""
         query5 = """DROP TABLE IF EXISTS hidden_factors"""
         query6 = """DROP TABLE IF EXISTS combined3"""
-        self.cursor.execute(query3)
-        self.cursor.execute(query4)
         self.cursor.execute(query0)
         self.cursor.execute(query1)
         self.cursor.execute(query2)
@@ -859,7 +854,7 @@ class GenerateDatabase:
 
 if __name__ == "__main__":
     db = GenerateDatabase()
-    # db.restart_process()
+    db.restart_process()
     db.excel_to_database()
     db.adjust_tables()
     db.merge_tables()

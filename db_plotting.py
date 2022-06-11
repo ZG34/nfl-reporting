@@ -1,10 +1,5 @@
-import sqlite3
-
-import numpy as np
 import pandas as pd
 import sqlite3 as sql
-import openpyxl
-import matplotlib.pyplot as plt
 
 
 class PlotConnection:

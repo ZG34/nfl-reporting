@@ -3,9 +3,8 @@ from tkinter import ttk
 import os
 
 import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-from PIL import Image, ImageGrab
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from PIL import ImageGrab
 import seaborn as sns
 
 from db_access import UserConnection
@@ -58,14 +57,6 @@ class ThirdDowns(tk.Frame):
                 self.report.resizable(False, False)
                 self.report.rowconfigure(0, weight=1)
                 self.report.columnconfigure(0, weight=1)
-
-                def print_runner():
-                    PrinterHandler()
-                    PrintingAction()
-
-                # self.menubar = tk.Menu(self.report)
-                # self.report['menu'] = self.menubar
-                # self.menubar.add_command(label="Print Selected Assets", command=lambda: PrinterHandler())
 
                 self.canvas = tk.Canvas(self.report, borderwidth=0)
                 self.frame = tk.Frame(self.canvas)

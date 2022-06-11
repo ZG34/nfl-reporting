@@ -1,3 +1,5 @@
+import os.path
+import sys
 from sys import exit as sys_exit
 import tkinter.ttk as ttk
 import tkinter as tk
@@ -20,6 +22,7 @@ import db_generate
 
 def generate_database():
     dbgen = db_generate.GenerateDatabase()
+    dbgen.restart_process()
     dbgen.excel_to_database()
     dbgen.adjust_tables()
     dbgen.merge_tables()
@@ -28,7 +31,8 @@ def generate_database():
     dbgen.split_table()
     dbgen.clean_data_continued()
     dbgen.third_down_generation()
-generate_database()
+
+# generate_database()
 
 UCDB = UserConnection()
 PCDB = PlotConnection()
