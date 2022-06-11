@@ -9,13 +9,26 @@ user32.SetProcessDPIAware()
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-import seaborn as sns
 
 import time
 
 from db_access import UserConnection
 from db_plotting import PlotConnection
 from third_down_reporting import ThirdDowns
+
+import db_generate
+
+def generate_database():
+    dbgen = db_generate.GenerateDatabase()
+    dbgen.excel_to_database()
+    dbgen.adjust_tables()
+    dbgen.merge_tables()
+    dbgen.remove_old_tables()
+    dbgen.clean_data()
+    dbgen.split_table()
+    dbgen.clean_data_continued()
+    dbgen.third_down_generation()
+generate_database()
 
 UCDB = UserConnection()
 PCDB = PlotConnection()
