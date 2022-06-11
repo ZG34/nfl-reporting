@@ -127,11 +127,8 @@ class ThirdDowns(tk.Frame):
                         # print(row1)
                         # print(row2)
 
-
                         # calculation = 100 * float(row1.loc['Times Called'])/float(row2.loc['Times Called'])
                         # print(calculation)
-
-
 
                         # print(two_yds.loc[0].at['Times Called'])
                         # print(run_pass_3rds_df.loc[1].at['Times Called'])
@@ -262,7 +259,7 @@ class ThirdDowns(tk.Frame):
                         x = df.iloc[:, 0].values.reshape(-1, 1)
                         y = df.iloc[:, 1].values.reshape(-1, 1)
 
-                        # TODO get my line to interesect the point between non-conversion and conversions
+                        # TODO get line to interesect the point between non-conversion and conversions
                         def create_lmplot():
                             p1 = sns.lmplot(
                                 y="Distance to Gain",

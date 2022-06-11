@@ -135,14 +135,6 @@ class ReportMain(tk.Frame, FilterTemplate):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        # self.geometry("1700x750")
-        # tk.Frame.attributes("-fullscreen", True)
-        # app.geometry("1800x750")
-        # app.attributes("-fullscreen", True)
-
-        # self.summary_frame = ttk.Labelframe(self, text="Result Summary", relief='ridge', style="my.TLabelframe",)
-        # self.summary_frame.grid(row=0, column=4)
-
         self.general_frame = ttk.Labelframe(
             self, text="General Filters", relief="ridge", style="my.TLabelframe"
         )
@@ -728,42 +720,7 @@ class ReportMain(tk.Frame, FilterTemplate):
         )
 
 
-class DatabaseGenerator(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-
-        self.name_entry_label = ttk.Label(self, text="Table Name:")
-        self.name_entry_label.grid(row=0, column=0)
-        self.name_entry = ttk.Entry(self)
-        self.name_entry.grid(row=1, column=0)
-
-        self.select_source = ttk.Button(self, text="Upload a Source File", command=self.source_upload())
-        self.select_source.grid(row=10, column=5)
-
-        self.home_button = ttk.Button(self, text="Home", command=lambda: controller.show_frame(LandingPage))
-        self.home_button.grid(row=10, column=4)
-
-
-
-
-        # Add logic to add new elements once source is selected, displaying the selected column names and allow edit
-        self.col1_label = ttk.Label(self, text="col 1 var")
-        self.col1_label.grid(row=3, column=0)
-
-        self.col1_type_entry = ttk.Combobox(self)
-        self.col1_type_entry.grid(row=3, column=1)
-
-    # LOGIC
-    # if excel (or csv) _ to _ sql
-    # enter: table name, index yes/no + index label --> GENERATE
-    # Populate column names into UI, allow for rename / set data types (combobox) / drop column /
-
-    def source_upload(self):
-        print("placeholder")
-
-
 if __name__ == "__main__":
     app = WindowManager()
-    # app.geometry("1800x750")
     app.attributes("-fullscreen", True)
     app.mainloop()
