@@ -12,9 +12,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 import seaborn as sns
 
 import time
-from threading import *
-
-from PIL import ImageGrab, Image, ImageDraw
 
 from db_access import UserConnection
 from db_plotting import PlotConnection
@@ -53,17 +50,16 @@ class WindowManager(tk.Tk):
 
         self.frames = {}
 
-        for F in (LandingPage, ReportMain, DatabaseGenerator,):
+        for F in (ReportMain, DatabaseGenerator,):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(LandingPage)
+        self.show_frame(ReportMain)
 
         menubar = tk.Menu(container)
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="placeholder", command=lambda: print("placeholder"))
-        filemenu.add_command(label="Home", command=lambda: self.show_frame(LandingPage))
 
         filemenu.add_command(label="Exit", command=sys_exit)
 
@@ -116,18 +112,6 @@ class FilterTemplate(WindowManager):
     def update_selections(self, event=None):
         print(self.template_label.info)
         print(self.template_label.cget("text"))
-
-
-class LandingPage(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-
-        self.view_reports = ttk.Button(self, text="View Reports", command=lambda: controller.show_frame(ReportMain))
-        self.view_reports.grid(row=0, column=0, padx=850, pady=200)
-
-        self.new_database = ttk.Button(self, text="Add New Database",
-                                       command=lambda: controller.show_frame(DatabaseGenerator))
-        self.new_database.grid(row=1, column=0, padx=850)
 
 
 class ReportMain(tk.Frame, FilterTemplate):

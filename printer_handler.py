@@ -1,5 +1,5 @@
 import os
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk
 import win32api
 import win32print
@@ -11,11 +11,11 @@ class PrinterHandler:
         printerdef = ""
 
         def locprinter():
-            pt = Toplevel()
+            pt = tk.Toplevel()
             pt.geometry("250x250")
             pt.title("choose printer")
-            var1 = StringVar()
-            LABEL = Label(pt, text="select Printer").pack()
+            var1 = tk.StringVar()
+            LABEL = tk.Label(pt, text="select Printer").pack()
             PRCOMBO = ttk.Combobox(pt, width=35, textvariable=var1)
             print_list = []
             printers = list(win32print.EnumPrinters(2))

@@ -27,8 +27,8 @@ class GenerateDatabase:
         self.cursor.execute(query6)
 
     def excel_to_database(self):
-        workbook_2020 = r"D:\Pycharm\NFL_Analysis\excel_data\2020 Charts.xlsx"
-        workbook = pd.read_excel(workbook_2020, sheet_name="ALL")
+        workbook_2020 = r"D:\Pycharm\NFL_Analysis\excel_data\2020 nfl.xlsx"
+        workbook = pd.read_excel(workbook_2020)
         workbook.to_sql(
             name="2020_all",
             con=self.connection,
@@ -38,8 +38,8 @@ class GenerateDatabase:
         )
         self.cursor.execute("""ALTER TABLE '2020_all' ADD COLUMN year DEFAULT '2020'""")
 
-        workbook_2019 = r"D:\Pycharm\NFL_Analysis\excel_data\2019 Charts.xlsx"
-        workbook = pd.read_excel(workbook_2019, sheet_name="ALL")
+        workbook_2019 = r"D:\Pycharm\NFL_Analysis\excel_data\2019 nfl.xlsx"
+        workbook = pd.read_excel(workbook_2019)
         workbook.to_sql(
             name="2019_all",
             con=self.connection,
@@ -859,7 +859,7 @@ class GenerateDatabase:
 
 if __name__ == "__main__":
     db = GenerateDatabase()
-    db.restart_process()
+    # db.restart_process()
     db.excel_to_database()
     db.adjust_tables()
     db.merge_tables()

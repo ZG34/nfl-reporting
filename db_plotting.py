@@ -390,7 +390,7 @@ class PlotConnection:
         AND (TEAM = (?))
         """
 
-        print(pd.read_sql_query(query, params=params, con=self.connection))
+        # print(pd.read_sql_query(query, params=params, con=self.connection))
         return pd.read_sql_query(query, params=params, con=self.connection)
 
     def test(self):

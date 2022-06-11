@@ -10,10 +10,12 @@ import seaborn as sns
 
 from db_access import UserConnection
 from db_plotting import PlotConnection
+from db_reporting import ReportConnector
 from printer_handler import PrinterHandler, PrintingAction
 
 UCDB = UserConnection()
 PCDB = PlotConnection()
+RCDB = ReportConnector()
 
 
 class ThirdDowns(tk.Frame):
@@ -51,17 +53,25 @@ class ThirdDowns(tk.Frame):
 
             else:
                 self.report = tk.Toplevel(self)
+                self.report.title(f"{team} 3rd Down Report")
                 self.report.geometry("1350x1000")
                 self.report.resizable(False, False)
                 self.report.rowconfigure(0, weight=1)
                 self.report.columnconfigure(0, weight=1)
+
+                def print_runner():
+                    PrinterHandler()
+                    PrintingAction()
+
+                # self.menubar = tk.Menu(self.report)
+                # self.report['menu'] = self.menubar
+                # self.menubar.add_command(label="Print Selected Assets", command=lambda: PrinterHandler())
 
                 self.canvas = tk.Canvas(self.report, borderwidth=0)
                 self.frame = tk.Frame(self.canvas)
                 self.vsb = tk.Scrollbar(
                     self.report, orient=tk.VERTICAL, command=self.canvas.yview
                 )
-                # self.canvas.configure(yscrollcommand=self.vsb.set, scrollregion=(0, 0, 2600, 2000))
                 self.canvas.configure(yscrollcommand=self.vsb.set)
 
                 self.canvas.bind_all(
@@ -105,15 +115,48 @@ class ThirdDowns(tk.Frame):
                         except Exception as e:
                             print(e)
 
-                summary_frame = ttk.Labelframe(self.frame, text="Summary")
-                summary_frame.grid(row=0, column=0)
+                def summary_placment():
+                    summary_frame = ttk.Labelframe(self.frame, text="Summary")
+                    summary_frame.grid(row=0, column=0)
 
-                conversion_getter = PCDB.team_3rd_down_conversions(team)
+                    conversion_getter = RCDB.team_3rd_down_conversions(team)
 
-                summary_text = f"{team} has a total of {conversion_getter.loc[1].at['Count']} conversions on 3rd down"
+                    run_pass_3rds_df = RCDB.run_pass_on_3rd(team)
 
-                summary_widget = ttk.Label(summary_frame, text=summary_text)
-                summary_widget.grid(row=0, column=0)
+                    def one_yd_checker():
+                        # print(run_pass_3rds_df.loc[run_pass_3rds_df['Distance'] == 5])
+                        one_yd = run_pass_3rds_df.loc[run_pass_3rds_df['Distance'] == 1]
+                        df_1yd = one_yd.reset_index()
+                        # print(df_1yd)
+                        # row1 = (df_1yd.loc[0, 'Times Called'])
+                        # row2 = (df_1yd.loc[1, 'Times Called'])
+
+                        # row1 = (df_1yd.loc[df_1yd['PlayType'] == 'Pass'])
+                        # row2 = (df_1yd.loc[df_1yd['PlayType'] == 'Run'])
+                        # print(row1)
+                        # print(row2)
+
+
+                        # calculation = 100 * float(row1.loc['Times Called'])/float(row2.loc['Times Called'])
+                        # print(calculation)
+
+
+
+                        # print(two_yds.loc[0].at['Times Called'])
+                        # print(run_pass_3rds_df.loc[1].at['Times Called'])
+                        # if on distance, run # is > than pass # by X percent (or reverse), give print a sentance to GUI
+                        # for index, row in run_pass_3rds_df.iterrows():
+                        #     print(row['PlayType'], row['Distance'], row['Times Called'])
+                            # if
+                    one_yd_checker()
+
+                    total_attempts = conversion_getter.loc[1].at['Count'] + conversion_getter.loc[0].at['Count']
+                    summary_text = f"{team} has {conversion_getter.loc[1].at['Count']} successful third down " \
+                                    f"conversions " \
+                                    f"on {total_attempts} attempts "
+                    summary_widget = ttk.Label(summary_frame, text=summary_text)
+                    summary_widget.grid(row=0, column=0)
+                summary_placment()
 
                 plotset_1_frame = ttk.Labelframe(self.frame, text="first set")
                 plotset_1_frame.grid(row=1, columnspan=5, rowspan=4)
@@ -191,8 +234,6 @@ class ThirdDowns(tk.Frame):
                 printer_select.grid(row=0, column=3)
 
                 def plot():
-                    # for widget in plotset_1_frame.winfo_children():
-                    #     widget.destroy()
                     sns.set_theme()
 
                     def plotset_1():
@@ -206,26 +247,16 @@ class ThirdDowns(tk.Frame):
                         p1 = sns.barplot(x="MAIN TAG", y="Count", data=df)
                         p1.set_xlabel("Call", fontsize=10)
                         p1.set_ylabel("Frequency", fontsize=10)
-                        # p1.set_xticks(ticks=range(0, 30), rotation=60)
                         p1.set_xticklabels(p1.get_xticklabels(), rotation=60)
                         plt.title("Main Tags")
                         p1.bar_label(p1.containers[0])
                         plt.tight_layout()
 
                         df2 = PCDB.play_tree_3rd(team)
-                        ax2 = fig.add_subplot(223)
+                        ax2 = fig.add_subplot(212)
                         p2 = sns.pointplot(x="Play Tree", y="Count", data=df2)
                         p2.set_xticklabels(p2.get_xticklabels(), rotation=60)
                         plt.tight_layout()
-
-                        df3 = PCDB.expected_3rd_gains(team)
-                        ax3 = fig.add_subplot(224)
-                        p3 = sns.lineplot(data=df3, x="Distance", y="Gain", hue="PlayType")
-                        # p3 = sns.histplot(x="MAIN TAG", alpha=0.3, data=df3)
-                        # sns.rugplot(x="MAIN TAG", data=df3)
-                        # p3.set_xticks(x1, x_3rds, rotation=60)
-                        plt.tight_layout()
-                        # ax.annotate(plot1, label_type='center', color='b')
 
                         fig_canvas = FigureCanvasTkAgg(fig, master=plotset_1_frame)
 
@@ -235,23 +266,11 @@ class ThirdDowns(tk.Frame):
                     plotset_1()
 
                     def plotset_2():
-                        # fig = plt.figure(figsize=(11, 9))
-                        # fig = plt.subplots()
                         df = PCDB.return_gain_vs_dist(team)
 
                         x = df.iloc[:, 0].values.reshape(-1, 1)
                         y = df.iloc[:, 1].values.reshape(-1, 1)
 
-                        # linear_regressor = LinearRegression()
-                        # linear_regressor.fit(x, y)
-                        # y_pred = linear_regressor.predict(x)
-                        # plt.scatter(x, y)
-                        # plt.plot(x, y_pred, color='red')
-
-                        # p5 = sns.scatterplot(y="Distance to Gain", x="Gained on Play", data=df, size="Count",
-                        #                      sizes=(40, 200), hue="Conversion", style="Conversion")
-                        # p1 = sns.regplot(y="Distance to Gain", x="Gained on Play", data=df, x_estimator=np.mean, ax=p5,
-                        #                  scatter=False)
                         # TODO get my line to interesect the point between non-conversion and conversions
                         def create_lmplot():
                             p1 = sns.lmplot(
@@ -266,24 +285,6 @@ class ThirdDowns(tk.Frame):
                         p1 = sns.relplot(
                             data=df, y="Distance to Gain", x="Gained on Play"
                         )
-                        # plt.close()
-
-                        # plt.show()
-                        # p1 = sns.lmplot(y="Distance to Gain", x="Gained on Play", data=df)
-
-                        # p1 = sns.jointplot(y="Distance to Gain", x="Gained on Play", data=df, kind="reg")
-
-                        # p1 = sns.pairplot(y_vars=["Distance to Gain"], x_vars=["Gained on Play"], data=df, kind="reg")
-
-                        # plt.show()
-
-                        # p1.set_xlabel("Call", fontsize=10)
-                        # p1.set_ylabel("Frequency", fontsize=10)
-                        # p1.set_xticks(x1, x_3rds, rotation=60)
-                        # plt.title("3rd Down Conversion Regression")
-                        # p1.bar_label(p1.containers[0])
-                        # plt.tight_layout()
-
                         figure = create_lmplot()
 
                         fig_canvas = FigureCanvasTkAgg(figure, master=plotset_2_frame)
@@ -298,7 +299,6 @@ class ThirdDowns(tk.Frame):
                         df = PCDB.return_gain_vs_dist(team)
                         ax1 = fig.add_subplot(211)
 
-                        # p5 = sns.lmplot(x="Distance", y="Gain", data=df)
                         p5 = sns.scatterplot(
                             y="Distance to Gain",
                             x="Gained on Play",
@@ -318,6 +318,8 @@ class ThirdDowns(tk.Frame):
                         p5.set_xticks(range(x_min, x_max))
                         plt.tight_layout()
                         plt.title(f"All {team} 3rd Downs")
+                        p5.set_xticklabels(p5.get_xticklabels(), rotation=60)
+
 
                         ax2 = fig.add_subplot(212)
                         df = PCDB.team_3rd_down_conversions_filtered(
@@ -343,6 +345,8 @@ class ThirdDowns(tk.Frame):
                         p5.set_xticks(range(x_min, x_max))
                         plt.tight_layout()
                         plt.title(f"Filtered {team} 3rd Downs")
+                        p5.set_xticklabels(p5.get_xticklabels(), rotation=60)
+
 
                         fig_canvas = FigureCanvasTkAgg(fig, master=plotset_3_frame)
 
@@ -355,12 +359,9 @@ class ThirdDowns(tk.Frame):
                         fig = plt.figure(figsize=(11, 9))
                         df = PCDB.run_pass_on_3rd(team)
 
-                        # sns.set_color_codes("pastel")
                         p1 = sns.barplot(
                             x="Distance", y="Times Called", hue="PlayType", data=df
                         )
-                        # sns.set_color_codes("muted")
-                        # p2 = sns.barplot(x="Conversion", y="Times Called", hue="PlayType", data=df, color="b")
 
                         fig_canvas = FigureCanvasTkAgg(fig, master=plotset_4_frame)
 
