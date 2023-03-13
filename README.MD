@@ -17,11 +17,17 @@
 
 ### Process
 > Track play-by-play data manually in Excel.
+
 > Use pandas to read Excel sheet into an SQL database.
+
 > Use SQL queries to clean and standardize the data.
+
 > Explore available data, and formulate questions to be answered.
+
 > Translate questions into SQL queries.
+
 > Design user interface to allow for generation of SQL queries along similar lines, to allow for dynamic question-answer workflow for any user.
+
 > Implement visualizations to assist in recognition of answers to posed questions. 
 
 
