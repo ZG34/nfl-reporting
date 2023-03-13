@@ -8,12 +8,13 @@
 
 ### Why use this dashboard / what does it solve?
 * You track play-by-play data via a spreadsheet, and would like tranform spreadsheet data to generate specific insights.
-
 * With this dashboard, you can formulate and answer fairly specific questions dynamically. Questions such as:
   - In 4th quarters vs Seattle, which plays have success against their Cover 1 calls?
-    Answer: Pass calls attack the backside cornerback. Run calls are often inside zone with good success. 
+    
+Answer: Pass calls attack the backside cornerback. Run calls are often inside zone with good success. 
   - When New England's final formation is 3x1 on 3rd & 6, what are they aiming to attack? 
-    Answer: underneath interior zones with quick concepts.
+    
+Answer: underneath interior zones with quick concepts.
 
 ### Process
 > Track play-by-play data manually in Excel.
